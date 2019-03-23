@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require ('login_action.php');
+	include ('login_action.php');
 ?>
 
 <html>
