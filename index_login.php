@@ -23,53 +23,89 @@
 		<img src="login_banner.jpg" style="height:33vh; width:100%">
 	</div>
 
-	<div class="topnav">
-	  	<a href="index.php">Home</a>
-	  	<a href="#contact">Contact</a>
-	  	<a href="#about">About Us</a>
-		<a href="index.php" style="float:right">Log Off</a>
-		<a href="user_profile.php" style="float:right"><?php echo $_SESSION['username'];?></a>
-	</div>
+	<?php include 'header_login.php'; ?>
 
 	<div class="row" id="home">
 		<div class="leftcolumn">
 			<div class="card">
 			<h2>Recipe Gallery</h2>
-				<h5> </h5>
-			  <div class="fakeimg" style="height:200px;">Image</div>
-			  <p> </p>
-				<p>
-				<?php   
-					$sql = "SELECT * FROM recipes";
-					if($result = mysqli_query($con, $sql))
-					{
-						if(mysqli_num_rows($result) > 0)
+				<div>
+					<p>
+					<?php    
+						$sql = "SELECT * FROM recipes WHERE view LIKE '%public%' ORDER BY RAND() LIMIT 12";						
+						if($result = mysqli_query($con, $sql))
 						{
-							while($row = mysqli_fetch_array($result))
+							if(mysqli_num_rows($result) > 0)
 							{
-								$rID = $row['recipeID'];
-								echo '<a href="recipe.php?id='.$rID.'"><img src="data:image/jpeg;base64,'.base64_encode($row['image']).'"style ="height: 200px; width:200px; margin-bottom: 22px; padding: 11px; border: 1px solid" hspace="10"/></a>';
-							}
+								while($row = mysqli_fetch_array($result))
+								{
+									$rID = $row['recipeID'];
+									echo '<div style ="display:inline-block; height: 250px; width:180px; margin-bottom: 22px; border-radius: 8px; background-color: #DCDCDC; margin-left: 1em"/><a href="recipe_login.php?id='.$rID.'"><img src="data:image/jpeg;base64,'.base64_encode($row['image']).'"style ="height: 160px; width:150px; border-radius: 8px; transform: translate(10%, 8%)"/></a>
+									<br>
+									<br>
+									<br>
+									<span style="margin-left: 15px;"><b>'.$row['recipeTitle'].'</b><span>
+									</div>';
+								}
+							} 
 						} 
-					} 
-				?>
-				</p>
-				<a href="upload_recipe.php">Add Recipe</a>
+					?>
+					</p>
+				</div>
+				<a href="recipe_gallery_login.php" style="text-decoration: none; color:#00bfff">To Recipe Gallery</a>
+				<a href="upload_recipe.php" style="float:right; text-decoration: none; color:#00bfff">Add Recipe</a>
 			</div>
+			
 			<div class="card">
 			<h2>User Recipe Books</h2>
-			<h5> </h5>
-			<div class="fakeimg" style="height:200px;">Image</div>
-			<p> </p>
-			<p> </p>
+				<div>
+					<p>
+					<?php    
+						$sql = "SELECT * FROM cookbook WHERE pvt_p LIKE '%public%' ORDER BY RAND() LIMIT 12";						
+						if($result = mysqli_query($con, $sql))
+						{
+							if(mysqli_num_rows($result) > 0)
+							{
+								while($row = mysqli_fetch_array($result))
+								{
+									$BID = $row['bookID'];
+									echo '<div style ="display:inline-block; height: 250px; width:180px; border-radius: 8px; background-color: #DCDCDC; margin-left: 1em"/><a href="cookbook.php?id='.$BID.'"><img src="data:image/jpeg;base64,'.base64_encode($row['bookCover']).'"style ="height: 160px; width:150px; border-radius: 8px; transform: translate(10%, 8%)"/>
+									</a>
+									<br>
+									<br>
+									<br>
+									<span style="margin-left: 15px;"><b>'.$row['bookName'].'</b><span>
+									</div>';
+								}
+							} 
+						} 
+					?>
+					</p>
+				</div>
+				<div>
+					<a href="cookbook_gallery_login.php" style="text-decoration: none; color:#00bfff">To Cookbook Gallery</a>
+				</div>
 			</div>
 		</div>
-	  <div class="rightcolumn">
+	  	
+		<div class="rightcolumn">
 		<div class="card">
-		  <h3>Recent Post</h3>
-		  <div class="fakeimg"><p>Image</p></div>
-		  <div class="fakeimg"><p>Image</p></div>
-		  <div class="fakeimg"><p>Image</p></div>
+			<h3>Recent Post</h3>
+			<br>
+			<?php
+			$sql = "SELECT * FROM recipes WHERE view LIKE '%public%' ORDER BY recipeDate LIMIT 10";						
+			if($result = mysqli_query($con, $sql))
+			{
+				if(mysqli_num_rows($result) > 0)
+				{
+					while($row = mysqli_fetch_array($result))
+					{
+						$rID = $row['recipeID'];
+						echo '<div><a style="text-decoration: none; color:#00bfff" href="recipe_login.php?id='.$rID.'"><b><span>'.$row['recipeTitle'].'&emsp;'.$row['recipeDate'].'</span></b></a></div><br>';
+					}
+				} 
+			} 
+			?>
 		</div>
 		<div class="card">
 		  <h2 id="about">About Us</h2>
@@ -82,21 +118,13 @@
 			<a href="#" class="instagram"><i class='fab fa-instagram' style='font-size:48px;color:#c32aa3'></i></a>
 			<a href="#" class="pinterest"><i class='fab fa-pinterest' style='font-size:48px;color:#c8232c'></i></a>
 			<a href="#" class="twitter"><i class='fab fa-twitter' style='font-size:48px;color:#1da1f2'></i></a>
-			<a href="#" class="google"><i class='fab fa-google-plus' style='font-size:48px;color:#DD4B39'></i></a>
 			<a href="#" class="youtube"><i class='fab fa-youtube' style='font-size:48px;color:red'></i></a>
-			<a href="#" class="snapchat"><i class='fab fa-snapchat' style='font-size:48px;color:#eaea00'></i></a>
 			<a href="#" class="reddit"><i class='fab fa-reddit' style='font-size:48px;color:#ff4500'></i></a>
 		</div>
 	  </div>
 	</div>
 
-	<div class="footer">
-		<div style="text-align:center">
-			<h3 id="contact" style="font-size: 24px; margin:8px">Contact Me</h3>
-			<p style="font-size: 14px; margin:4px;">University of Pittsburgh</p>
-			<p style="font-size: 14px; margin:4px;"> Joc101@pitt.edu</p>
-			<span class="footer_text" style="font-size: 10px;">Copyright © 2019 All Rights Reserved. </span>
-		</div>
-	</div>
+	<?php include 'footer.php'; ?>
+
 </body>
 </html>
